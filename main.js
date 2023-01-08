@@ -5,7 +5,7 @@ let y_incr = 1;
 function init() {
 
     dvd.style.position = 'absolute';
-    document.body.style.background = '#4d4d40';
+    document.body.style.background = '#000000';
     update_color();
     setInterval(frames, 1);
 }
