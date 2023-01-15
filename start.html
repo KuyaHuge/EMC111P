@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Module 2 Exam - FLORES</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+        <script src="main.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			scene.background = new THREE.Color( 0xffffff );
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			// bed and contents
+			const geometry = new THREE.BoxGeometry( 2.1, 0.49, 1.02 );
+			const material = new THREE.MeshBasicMaterial( { color: 0x808080 } );
+			const bed = new THREE.Mesh( geometry, material );
+			scene.add( bed );
+			blanket();
+			pillow();
+
+			// windows
+			window1();
+			
+			// study area
+			table();
+
+			//floor and walls
+			floor();
+
+			camera.position.z = 5;
+
+			function animate() {
+				requestAnimationFrame( animate );
+				bed.position.x = 3.1;
+				bed.position.y = -1;
+				bed.rotation.x = 0.7;
+				bed.rotation.y = 1.6;
+
+				renderer.render( scene, camera );
+			};
+			animate();
+			
+		</script>
+	</body>
+</html>
