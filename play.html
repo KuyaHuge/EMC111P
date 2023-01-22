@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Module 3 Quiz 1 - FLORES</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+        <script src="playmain.js"></script>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			
+			scene.background = new THREE.Color( 0xc89d7c );
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			const light = new THREE.HemisphereLight( 0xffffff, 0x000000, 1 );
+            scene.add( light );
+
+			// floor
+			const woodenfloor = new THREE.TextureLoader().load( 'Assets/Textures/Wood1.jpg' );
+			const geometry = new THREE.BoxGeometry( 0.5, 0.49, 10 );
+			const material = new THREE.MeshLambertMaterial( { map: woodenfloor } );
+			const floor = new THREE.Mesh( geometry, material );
+			scene.add( floor );
+
+			//tv
+			tvtable();
+
+			//chair 
+			chair();
+
+			//table
+			othertable();
+			//wall
+			wall();
+
+		
+			camera.position.z = 5;
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+				floor.position.x = 0;
+				floor.position.y = -1.97;
+				floor.rotation.x = 0;
+				floor.rotation.y = 1.571;
+
+				renderer.render( scene, camera );
+			};
+			animate();
+			
+		</script>
+	</body>
+</html>
