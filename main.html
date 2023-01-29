@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>M3 Q2 - FLORES</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="three.js"></script>
+    <script src="main.js"></script>
+
+    <script type = 'Module'>
+        import{ OrbitControls } from "../JS";
+        import { FontLoader } from "../JS"
+        import { TextGeometry } from "../JS"
+    
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        let stars, starGeo;
+
+        const loader = new FontLoader();
+
+        loader.load('Open Sans_Bold.json', function (font) {
+
+            const geometry = new TextGeometry('Eugene F. Flores II', {
+                font: font,
+                size: 6,
+                height: 5,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 10,
+                bevelSize: 8,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+            const textMesh = new THREE.Mesh(geometry, [
+                new THREE.MeshPhongMaterial({ color : 0xad4000}),
+                new THREE.MeshPhongMaterial({ color : 0x5c2301})
+            ])
+
+            scene.add(textMesh);
+            textMesh.castshadow = true
+            textMesh.position.y = 0
+            textMesh.position.z = 0 
+            textMesh.position.x = 0
+            textMesh.rotation.y += 0.01
+            textMesh.rotation.x += 0.01
+
+        });
+
+        particles();
+
+        camera.position.z = 5;
+
+        function particles() {
+            const points = [];
+
+            for (let i = 0; i < 6000; i++) {
+                let star = new THREE.Vector3(
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300
+
+                );
+                star.velocity = 0
+                star.acceleration = 0.02
+                points.push(star);
+
+            }
+            starGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+            let sprite = new THREE.TextureLoader().load('Assets/Textures/star.png')
+            let starMaterial = new THREE.PointsMaterial({
+                color: getRGBColor(),
+                size: 1.3,
+                map: sprite,
+            })
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
+
+        }
+        function animateparticles() {
+            starGeo.attributes.position.array.forEach((p) => {
+                p.velocity += p.acceleration;
+                p.y += p.velocity;
+
+                if (p.y < -200) {
+                    p.y = 200;
+                    p.velocity = 0;
+
+                }
+            });
+            starGeo.verticesNeedUpdate = true;
+            stars.rotation.x += -0.002;
+        }
+
+        function randomColor() {
+            var random = Math.floor(Math.random() * 300);
+            return random;
+        }
+
+        function getRGBColor() {
+            return `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
+
+
+            const elements = [];
+
+            for (i = 0; i < 1000; i++) {
+                // Create new element
+                const element = document.createElement("div");
+                element.style.background = getRGBColor();
+
+                // Save a reference to the element
+                elements.push(element);
+
+                // Add element to the DOM
+                document.body.appendChild(element);
+
+
+                setInterval(function () {
+                    // Update the color of every element
+                    for (element of elements) {
+                        const rgbColor = `rgb(${randomColor()}, ${randomColor()}, ${randomColor()})`;
+                        element.style.background = getRGBColor();
+                    };
+                }, 3000); // Execute every 3000 milliseconds (3 seconds)
+            }
+        }
+
+        function animate() {
+            animateparticles();
+            requestAnimationFrame(animate);
+
+            renderer.render(scene, camera);
+        };
+        animate();
+
+    </script>
+</body>
+
+</html>
