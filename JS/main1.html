@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>M3 Q2 - FLORES</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="three.js"></script>
+    <script src="mainJS.js"></script>
+
+    <script type='module'>
+        import { FontLoader } from "/JS/FontLoader.js"
+        import { TextGeometry } from "/JS/TextGeometry.js"
+
+        //SCENE
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+
+        //CAMERA
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        //INIT CAMERA
+
+        camera.position.z = 5;
+        camera.position.x = 0;
+        camera.position.y = 0;  
+
+        //RENDERER
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        //
+
+        const loader = new FontLoader();
+
+        loader.load('../JS/Fonts/Open Sans_Bold.json', function (font) {
+
+            const geometry = new TextGeometry('Eugene F. Flores II', {
+                font: font,
+                size: 0.3,
+                height: 1,
+                
+
+            });
+
+            const textMesh = new THREE.Mesh(geometry, [
+                new THREE.MeshPhongMaterial({ color: 0xad4000 })
+               
+            ])
+
+            scene.add(textMesh);
+            
+
+            function animate() {
+                
+            requestAnimationFrame(animate);
+            textMesh.position.y = 0
+            textMesh.position.z = 0
+            textMesh.position.x = -2
+            textMesh.rotation.y = 0.01
+            textMesh.rotation.x += 0.03
+        
+            renderer.render(scene, camera);
+        };
+        animate();
+        particles();
+        
+
+        });
+        //
+        function particles() {
+            const points = [];
+
+            for (let i = 0; i < 4000; i++) {
+                let star = new THREE.Vector3(
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300
+
+                );
+                star.velocity = 0
+                star.acceleration = 0.02
+                points.push(star);
+
+            }
+            let sprite = new THREE.TextureLoader().load('Assets/Textures/star.png')
+            let starMaterial = new THREE.PointsMaterial({
+                color: randomColor(),
+                size: 1.3,
+                map: sprite,
+            })
+            let stars, starGeo;
+            starGeo = new THREE.BufferGeometry().setFromPoints(points);
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
+        }
+
+        
+        function animateparticles(particles) {
+            starGeo.attributes.position.array.forEach((p) => {
+                p.velocity += p.acceleration;
+                p.y += p.velocity;
+
+                if (p.y < -200) {
+                    p.y = 200;
+                    p.velocity = 0;
+
+                }
+            });
+            starGeo.verticesNeedUpdate = true;
+            stars.rotation.x += -0.002;
+        }
+        
+        
+     
+
+    </script>
+</body>
+
+</html>
